@@ -62,30 +62,43 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+for t=1:m
+  % Grab current training example
+  a_t_1 = X(t, :)';
+  a_t_1 = [1; a_t_1];
+  current_y = zeros(num_labels, 1);
+  current_y(y(t)) = 1;
 
+  % Forward propagation
+  a_t_2 = sigmoid(Theta1 * a_t_1);
+  a_t_2 = [1; a_t_2];
+  output_t = sigmoid(Theta2 * a_t_2);
+  J = J + current_y'*log(output_t) + (1-current_y)'*log(1-output_t);
 
+  % Backward propagation
+  delta_L = output_t - current_y;
+  delta_2 = Theta2'*delta_L .* (a_t_2.*(1-a_t_2));
+  delta_2 = delta_2(2:end, :);
 
+  Theta2_grad = Theta2_grad + delta_L*a_t_2';
+  Theta1_grad = Theta1_grad + delta_2*a_t_1';
+endfor
 
+Theta1_for_reg = Theta1(:,2:end);
+Theta2_for_reg = Theta2(:,2:end);
+J_reg_param = (lambda/(2*m))*(Theta1_for_reg(:)'*Theta1_for_reg(:) + Theta2_for_reg(:)'*Theta2_for_reg(:));
+J = (-1/m)*J + J_reg_param;
 
-
-
-
-
-
-
-
-
-
-
-
+Theta1_grad = (1/m)*(Theta1_grad + lambda*[zeros(size(Theta1, 1), 1) Theta1_for_reg]);
+Theta2_grad = (1/m)*(Theta2_grad + lambda*[zeros(size(Theta2, 1), 1) Theta2_for_reg]);
+% Theta1_grad = (1/m)*Theta1_grad + lambda*[zeros(1, size(Theta1, 2)); Theta1(2:end, :)];
+% Theta2_grad = (1/m)*Theta2_grad + lambda*[zeros(1, size(Theta2, 2)); Theta2(2:end, :)];
+grad = [Theta1_grad(:); Theta2_grad(:)];
 
 
 % -------------------------------------------------------------
 
 % =========================================================================
-
-% Unroll gradients
-grad = [Theta1_grad(:) ; Theta2_grad(:)];
 
 
 end
