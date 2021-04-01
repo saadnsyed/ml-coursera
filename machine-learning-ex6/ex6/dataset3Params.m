@@ -23,10 +23,25 @@ sigma = 0.3;
 %        mean(double(predictions ~= yval))
 %
 
+Cvec = [0.03; 0.1; 0.3; 1; 3; 10; 30];
+Cerror = zeros(size(Cvec, 1), 1);
+for i=1:size(Cvec, 1)
+  model = svmTrain(X, y, Cvec(i), @(x1, x2) gaussianKernel(x1, x2, sigma));
+  predictions = svmPredict(model, Xval);
+  Cerror(i) = mean(double(predictions ~= yval));
+endfor
+[min_error, min_error_index] = min(Cerror)
+C = Cvec(min_error_index);
 
-
-
-
+sigmaVec = [0.03; 0.1; 0.3; 1; 3; 10; 30];
+sigmaError = zeros(size(sigmaVec, 1), 1);
+for i=1:size(sigmaVec, 1)
+  model = svmTrain(X, y, C, @(x1, x2) gaussianKernel(x1, x2, sigmaVec(i)));
+  predictions = svmPredict(model, Xval);
+  sigmaError(i) = mean(double(predictions ~= yval));
+endfor
+[min_error, min_error_index] = min(sigmaError)
+sigma = sigmaVec(min_error_index);
 
 
 % =========================================================================
