@@ -27,8 +27,19 @@ centroids = zeros(K, n);
 %
 
 
-
-
+for i=1:K
+  x_avg = zeros(1, n);
+  num_elements = 0;
+  for j=1:m
+    if idx(j) == i
+      x_avg = x_avg + X(j, :);
+      num_elements = num_elements + 1;
+    end
+  end
+  if (num_elements > 0)
+    centroids(i, :) = x_avg./num_elements;
+  end
+end
 
 
 

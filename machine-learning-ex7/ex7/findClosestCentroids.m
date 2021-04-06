@@ -22,7 +22,16 @@ idx = zeros(size(X,1), 1);
 %
 
 
-
+for i=1:size(X,1)
+  deltas = zeros(K, 1);
+  for j=1:K
+    deltaVec = X(i, :) - centroids(j, :);
+    delta = sqrt(deltaVec*deltaVec');
+    deltas(j) = delta;
+  end
+  [min_delta min_delta_index] = min(deltas);
+  idx(i) = min_delta_index;
+end
 
 
 
