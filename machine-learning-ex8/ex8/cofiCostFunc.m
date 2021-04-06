@@ -40,20 +40,6 @@ Theta_grad = zeros(size(Theta));
 %                     partial derivatives w.r.t. to each element of Theta
 %
 
-% for i=1:size(R, 1)
-%   for j=1:size(R, 2)
-%     if (R(i,j) == 0)
-%       continue
-%     end
-%     inner_difference = Theta(j,:)*X(i,:)' - Y(i,j);
-%     squared_error = (inner_difference)^2;
-%     J = J + squared_error;
-
-%     X_grad(i,:) = X_grad(i,:) + inner_difference*Theta(j,:);
-%     Theta_grad(j,:) = Theta_grad(j,:) + inner_difference*X(i,:);
-%   end
-% end
-
 inner_differences = (X*Theta' - Y).*R;
 X_grad = X_grad + inner_differences*Theta;
 Theta_grad = Theta_grad + inner_differences'*X;
